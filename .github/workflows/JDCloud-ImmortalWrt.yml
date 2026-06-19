@@ -26,4 +26,5 @@ jobs:
       manifest_file: immortalwrt-qualcommax-ipq60xx.manifest
       delete_old_workflows: true
       release_summary: >-
-        这是开启全功能NSS的6.12内核固件，默认主题为Aurora；该固件在ImmortalWrt的基础上，添加了额外的软件包cpufreq、ddns、upnp、wol、samba4、vlmcsd、aria2、autoreboot、uhttpd、frps、frpc、diskman、hd-idle、acme、openlist2、wireguard、watchcat、3cat、passwall、gecoosac，并添加了若干工具，具体详见JDCloud.config(NoWiFi.config)和General.config。
+        深度定制开启全功能NSS的6.12内核隐私网关固件，默认地址 192.168.199.1。精简了无用组件，集成了 OpenClash、OAF、banIP、SQM 等高防组件，搭载 Argon 纯净主题，并支持满血 USB 存储自动挂载与 Wireguard 快速组网。具体详见JDCloud.config(NoWiFi.config)和General.config。
+     
