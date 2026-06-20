@@ -14,7 +14,7 @@ sed -i "s#_('Firmware Version'), (L\.isObject(boardinfo\.release) ? boardinfo\.r
                 href: 'https://github.com/laipeng668/openwrt-ci-roc/releases',\n \
                 target: '_blank',\n \
                 rel: 'noopener noreferrer'\n \
-                }, [ 'Built by Roc Custom $(date "+%Y-%m-%d %H:%M:%S")' ])\n \
+                }, [ 'Built by Andy $(date "+%Y-%m-%d %H:%M:%S")' ])\n \
             ]),#" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 
 # 2. 调整 NSS 驱动 q6_region 内存区域预留大小为 64MB
@@ -35,33 +35,19 @@ rm -rf feeds/packages/net/ariang
 rm -rf feeds/packages/net/aria2
 rm -rf feeds/packages/net/nginx
 rm -rf feeds/packages/net/frp
-rm -rf feeds/packages/lang/golang
 
-# Git 稀疏克隆函数
+# 5. 仅保留 Golang 依赖 (OpenList 和 Easytier 编译需要)
 function git_sparse_clone() {
   local branch="$1"
   local repourl="$2"
   local repodir
   shift 2
-
   repodir="$(basename "${repourl%.git}")"
   rm -rf "$repodir"
   git clone --depth=1 -b "$branch" --single-branch --filter=blob:none --sparse "$repourl" "$repodir"
-  (
-    cd "$repodir"
-    git sparse-checkout set "$@"
-    mv -f "$@" ../package
-  )
+  (cd "$repodir" && git sparse-checkout set "$@" && mv -f "$@" ../package)
   rm -rf "$repodir"
 }
-
-# 5. 保留核心优化的组件
-git_sparse_clone aria2 https://github.com/laipeng668/packages net/aria2
-mv -f package/aria2 feeds/packages/net/aria2
-git_sparse_clone nginx https://github.com/laipeng668/packages net/nginx
-mv -f package/nginx feeds/packages/net/nginx
-git_sparse_clone ariang https://github.com/laipeng668/packages net/ariang
-mv -f package/ariang feeds/packages/net/ariang
 git_sparse_clone master https://github.com/laipeng668/packages lang/golang
 mv -f package/golang feeds/packages/lang/golang
 
@@ -77,6 +63,7 @@ git clone --depth=1 https://github.com/EasyTier/luci-app-easytier.git package/lu
 git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
 git clone --depth=1 https://github.com/linkease/istore.git package/istore
+# openList 官方最佳适配源 (WebDAV 服务器核心)
 git clone --depth=1 https://github.com/sbwml/luci-app-openlist2 package/openlist2
 
 ./scripts/feeds update -a
