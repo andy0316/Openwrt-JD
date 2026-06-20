@@ -49,6 +49,9 @@ function git_sparse_clone() {
   rm -rf "$repodir"
 }
 git_sparse_clone master https://github.com/laipeng668/packages lang/golang
+
+# 【关键修复】在覆盖前先强制删除官方 feeds 中已下载的旧版 golang，避免 Directory not empty 报错
+rm -rf feeds/packages/lang/golang
 mv -f package/golang feeds/packages/lang/golang
 
 # 6. 强制清理默认代理组件
